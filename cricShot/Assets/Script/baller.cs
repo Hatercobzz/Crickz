@@ -13,6 +13,7 @@ public class baller : MonoBehaviour
     public float maxX = 5f;
     public float minY = 0f;
     public float maxY = 5f;
+    public Transform[] spawnObjects;
 
     void Start()
     {
@@ -28,11 +29,23 @@ public class baller : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            float randomNum = UnityEngine.Random.Range(1f,2f);
-            GameObject ball = Instantiate(ballPrefab, transform.position, Quaternion.identity);
+            float randomNum = UnityEngine.Random.Range(1f, 2f);
+
+            int randomSpawnIndex = UnityEngine.Random.Range(0, spawnObjects.Length);
+            Transform spawnPoint = spawnObjects[randomSpawnIndex];
+            GameObject ball = Instantiate(ballPrefab, spawnPoint.transform.position, Quaternion.identity);
             ball.transform.Rotate(-25f, 0f, 0f);
             Rigidbody rb = ball.GetComponent<Rigidbody>();
             rb.AddForce(-ball.transform.forward * 1000 * randomNum);
         }
+
     }
-}
+        IEnumerator Destroy(GameObject ball)
+        {
+            yield return new WaitForSeconds(3.0f);
+            if (ball != null)
+            {
+                Destroy(ball);
+            }
+        }
+    }
